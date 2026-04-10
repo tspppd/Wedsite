@@ -1,4 +1,4 @@
-import { Template, Section, SectionType, Plan } from '../types/index';
+import { Template, Section, SectionType, Plan } from '@/types/index';
 
 // ===== Templates =====
 export const templates: Template[] = [

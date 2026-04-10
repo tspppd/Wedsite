@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# WedSite - Wedding Website Builder
+
+สร้างเว็บไซต์งานแต่งงานของคุณได้ง่ายๆ ไม่ต้องเขียนโค้ด
+
+## Features
+
+- 🎨 Drag & Drop Builder
+- 💒 Beautiful Templates
+- 🌙 Dark Mode Support
+- 🔐 Authentication with Better Auth
+- 📱 Responsive Design
+- ⚡ Built with Next.js 16 & React 19
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Bun (recommended) or Node.js 18+
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+# Install dependencies
+bun install
+
+# Set up environment variables
+cp .env.local.example .env.local
+
+# Generate auth secret
+# Update BETTER_AUTH_SECRET in .env.local
+
+# Run development server
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Framework**: Next.js 16.2
+- **UI**: React 19, Tailwind CSS 4
+- **Authentication**: Better Auth
+- **Database**: SQLite (via better-sqlite3)
+- **State Management**: Zustand
+- **Icons**: Lucide React
+- **Theme**: next-themes
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/              # Next.js app directory
+├── components/       # React components
+│   ├── ui/          # UI components
+│   ├── layouts/     # Layout components
+│   └── providers/   # Context providers
+├── lib/             # Utilities and configs
+├── stores/          # Zustand stores
+└── types/           # TypeScript types
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Authentication
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This project uses Better Auth for authentication:
 
-## Deploy on Vercel
+- Email/Password authentication
+- Session management
+- Protected routes
+- User profile management
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Environment Variables
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```env
+BETTER_AUTH_SECRET=your-secret-key
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+## License
+
+MIT

@@ -1,25 +1,29 @@
-import { Link, useNavigate } from 'react-router-dom';
+'use client'
+
+import Link from 'next/link';
 import { Heart, Menu, X, User, LogOut } from 'lucide-react';
 import { useState } from 'react';
-import { useAuthStore } from '../../stores/useAuthStore';
 import { Button } from '../ui/Button';
+import { useRouter } from 'next/navigation';
+import { ThemeToggle } from '../ui/ThemeToggle';
+import { useSession, signOut } from '@/lib/auth-client';
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { user, isAuthenticated, logout } = useAuthStore();
-  const navigate = useNavigate();
+  const { data: session } = useSession();
+  const router = useRouter();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/');
+  const handleLogout = async () => {
+    await signOut();
+    router.push('/');
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-100 dark:border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <Heart className="w-8 h-8 text-pink-500 fill-pink-500" />
             <span className="text-xl font-bold bg-linear-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent">
               WedSite
@@ -28,43 +32,42 @@ export function Navbar() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-6">
-            <Link to="#features" className="text-gray-600 hover:text-pink-500 transition-colors">
+            <Link href="#features" className="text-gray-600 dark:text-gray-300 hover:text-pink-500 transition-colors">
               ฟีเจอร์
             </Link>
-            <Link to="#templates" className="text-gray-600 hover:text-pink-500 transition-colors">
+            <Link href="#templates" className="text-gray-600 dark:text-gray-300 hover:text-pink-500 transition-colors">
               เทมเพลต
             </Link>
-            <Link to="/pricing" className="text-gray-600 hover:text-pink-500 transition-colors">
+            <Link href="/pricing" className="text-gray-600 dark:text-gray-300 hover:text-pink-500 transition-colors">
               ราคา
             </Link>
           </div>
 
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center gap-3">
-            {isAuthenticated ? (
+            <ThemeToggle />
+            {session?.user ? (
               <div className="flex items-center gap-3">
                 <Link
-                  to="/dashboard"
-                  className="flex items-center gap-2 text-gray-600 hover:text-pink-500"
+                  href="/builder"
+                  className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-pink-500"
                 >
                   <User className="w-5 h-5" />
-                  {user?.name}
+                  {session.user.name}
                 </Link>
-                {user?.plan === 'free' && (
-                  <Link to="/pricing">
-                    <Button size="sm">Upgrade Pro</Button>
-                  </Link>
-                )}
+                <Link href="/pricing">
+                  <Button size="sm">Upgrade Pro</Button>
+                </Link>
                 <Button variant="ghost" size="sm" onClick={handleLogout}>
                   <LogOut className="w-4 h-4" />
                 </Button>
               </div>
             ) : (
               <>
-                <Link to="/login">
+                <Link href="/login">
                   <Button variant="ghost">เข้าสู่ระบบ</Button>
                 </Link>
-                <Link to="/register">
+                <Link href="/register">
                   <Button>สมัครสมาชิก</Button>
                 </Link>
               </>
@@ -83,34 +86,38 @@ export function Navbar() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-t">
+        <div className="md:hidden bg-white dark:bg-gray-900 border-t dark:border-gray-800">
           <div className="px-4 py-4 space-y-3">
+            <div className="flex items-center justify-between pb-3 border-b dark:border-gray-800">
+              <span className="text-sm text-gray-600 dark:text-gray-400">ธีม</span>
+              <ThemeToggle />
+            </div>
             <Link
-              to="#features"
-              className="block py-2 text-gray-600"
+              href="#features"
+              className="block py-2 text-gray-600 dark:text-gray-300"
               onClick={() => setMobileMenuOpen(false)}
             >
               ฟีเจอร์
             </Link>
             <Link
-              to="#templates"
-              className="block py-2 text-gray-600"
+              href="#templates"
+              className="block py-2 text-gray-600 dark:text-gray-300"
               onClick={() => setMobileMenuOpen(false)}
             >
               เทมเพลต
             </Link>
             <Link
-              to="/pricing"
-              className="block py-2 text-gray-600"
+              href="/pricing"
+              className="block py-2 text-gray-600 dark:text-gray-300"
               onClick={() => setMobileMenuOpen(false)}
             >
               ราคา
             </Link>
-            <div className="pt-3 border-t space-y-2">
-              {isAuthenticated ? (
+            <div className="pt-3 border-t dark:border-gray-800 space-y-2">
+              {session?.user ? (
                 <>
-                  <Link to="/dashboard" className="block">
-                    <Button className="w-full">Dashboard</Button>
+                  <Link href="/builder" className="block">
+                    <Button className="w-full">Builder</Button>
                   </Link>
                   <Button variant="outline" className="w-full" onClick={handleLogout}>
                     ออกจากระบบ
@@ -118,10 +125,10 @@ export function Navbar() {
                 </>
               ) : (
                 <>
-                  <Link to="/login" className="block">
+                  <Link href="/login" className="block">
                     <Button variant="outline" className="w-full">เข้าสู่ระบบ</Button>
                   </Link>
-                  <Link to="/register" className="block">
+                  <Link href="/register" className="block">
                     <Button className="w-full">สมัครสมาชิก</Button>
                   </Link>
                 </>

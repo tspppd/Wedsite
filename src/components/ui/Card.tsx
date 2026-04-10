@@ -9,8 +9,8 @@ interface CardProps {
 export function Card({ children, className = '', hover = false }: CardProps) {
   return (
     <div
-      className={`bg-white rounded-xl shadow-lg border border-gray-100 ${
-        hover ? 'transition-transform hover:-translate-y-1 hover:shadow-xl' : ''
+      className={`bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 ${
+        hover ? 'transition-transform hover:-translate-y-1 hover:shadow-xl dark:hover:shadow-2xl' : ''
       } ${className}`}
     >
       {children}
@@ -24,7 +24,7 @@ interface CardHeaderProps {
 }
 
 export function CardHeader({ children, className = '' }: CardHeaderProps) {
-  return <div className={`p-4 border-b ${className}`}>{children}</div>;
+  return <div className={`p-4 border-b dark:border-gray-700 ${className}`}>{children}</div>;
 }
 
 interface CardContentProps {

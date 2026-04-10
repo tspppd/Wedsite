@@ -1,9 +1,9 @@
 import { Heart } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 export function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300">
+    <footer className="bg-gray-900 dark:bg-gray-950 text-gray-300 dark:text-gray-400">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
@@ -17,9 +17,9 @@ export function Footer() {
               เลือกเทมเพลตสวยๆ และปรับแต่งได้ตามต้องการ
             </p>
             <div className="flex gap-4">
-              <a href="#" className="hover:text-pink-500 transition-colors text-sm">Instagram</a>
-              <a href="#" className="hover:text-pink-500 transition-colors text-sm">Facebook</a>
-              <a href="#" className="hover:text-pink-500 transition-colors text-sm">Twitter</a>
+              <Link href="#" className="hover:text-pink-500 transition-colors text-sm">Instagram</Link>
+              <Link href="#" className="hover:text-pink-500 transition-colors text-sm">Facebook</Link>
+              <Link href="#" className="hover:text-pink-500 transition-colors text-sm">Twitter</Link>
             </div>
           </div>
 
@@ -27,18 +27,18 @@ export function Footer() {
           <div>
             <h4 className="font-semibold text-white mb-4">ผลิตภัณฑ์</h4>
             <ul className="space-y-2">
-              <li><Link to="/#features" className="hover:text-pink-500 transition-colors">ฟีเจอร์</Link></li>
-              <li><Link to="/#templates" className="hover:text-pink-500 transition-colors">เทมเพลต</Link></li>
-              <li><Link to="/pricing" className="hover:text-pink-500 transition-colors">ราคา</Link></li>
+              <li><Link href="/#features" className="hover:text-pink-500 transition-colors">ฟีเจอร์</Link></li>
+              <li><Link href="/#templates" className="hover:text-pink-500 transition-colors">เทมเพลต</Link></li>
+              <li><Link href="/pricing" className="hover:text-pink-500 transition-colors">ราคา</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-semibold text-white mb-4">ช่วยเหลือ</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="hover:text-pink-500 transition-colors">คำถามที่พบบ่อย</a></li>
-              <li><a href="#" className="hover:text-pink-500 transition-colors">ติดต่อเรา</a></li>
-              <li><a href="#" className="hover:text-pink-500 transition-colors">นโยบายความเป็นส่วนตัว</a></li>
+              <li><Link href="#" className="hover:text-pink-500 transition-colors">คำถามที่พบบ่อย</Link></li>
+              <li><Link href="#" className="hover:text-pink-500 transition-colors">ติดต่อเรา</Link></li>
+              <li><Link href="#" className="hover:text-pink-500 transition-colors">นโยบายความเป็นส่วนตัว</Link></li>
             </ul>
           </div>
         </div>
