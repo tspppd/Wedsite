@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { Heart, Mail, Lock, User, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 import { Button, Input } from '@/components/ui';
-import { authClient } from '@/lib/auth-client';
+import { auth } from '@/lib/auth/client';
 import { registerSchema, type RegisterInput } from '@/lib/validations/auth';
 
 export default function RegisterPage() {
@@ -33,22 +33,15 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      await authClient.signUp.email(
-        {
-          email: data.email,
-          password: data.password,
-          name: data.name,
-        },
-        {
-          onSuccess: () => {
-            router.push('/builder');
-          },
-          onError: (ctx) => {
-            setError(ctx.error.message || 'สมัครสมาชิกไม่สำเร็จ');
-          },
-        }
-      );
-    } catch (err) {
+      const { error: signUpError } = await auth.signUp(data.email, data.password, data.name);
+
+      if (signUpError) {
+        setError(signUpError.message || 'สมัครสมาชิกไม่สำเร็จ');
+      } else {
+        router.push('/builder');
+        router.refresh();
+      }
+    } catch (err: any) {
       setError('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
     } finally {
       setLoading(false);
@@ -60,10 +53,12 @@ export default function RegisterPage() {
     setGoogleLoading(true);
 
     try {
-      await authClient.signIn.social({
-        provider: 'google',
-        callbackURL: '/builder',
-      });
+      const { error: googleError } = await auth.signInWithGoogle();
+      
+      if (googleError) {
+        setError('เกิดข้อผิดพลาดในการสมัครด้วย Google');
+        setGoogleLoading(false);
+      }
     } catch (err) {
       setError('เกิดข้อผิดพลาดในการสมัครด้วย Google');
       setGoogleLoading(false);

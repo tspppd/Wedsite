@@ -7,10 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed": "bun run scripts/seed-users-api.ts",
-    "seed:supabase": "bun run scripts/seed-supabase.ts",
-    "seed:prisma": "bun run scripts/seed-prisma.ts",
-    "generate:secret": "bun run scripts/generate-secret.ts",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
     "prisma:studio": "prisma studio"
@@ -20,13 +16,8 @@
     "@prisma/client": "^7.7.0",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.103.0",
-    "bcrypt": "^6.0.0",
-    "better-auth": "^1.6.2",
-    "better-call": "^2.0.3",
-    "better-sqlite3": "^12.8.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "kysely": "^0.28.15",
     "lucide-react": "^1.8.0",
     "next": "16.2.3",
     "next-themes": "^0.4.6",
@@ -43,8 +34,6 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/bcrypt": "^6.0.0",
-    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -54,13 +43,7 @@
     "tailwindcss": "^4",
     "typescript": "^5"
   },
-  "ignoreScripts": [
-    "sharp",
-    "unrs-resolver"
-  ],
   "trustedDependencies": [
-    "bcrypt",
-    "better-sqlite3",
     "sharp",
     "unrs-resolver"
   ]

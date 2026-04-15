@@ -12,11 +12,11 @@ import {
   Shield
 } from 'lucide-react';
 import { Button, Input, Card, CardContent } from '@/components/ui';
-import { useSession } from '@/lib/auth-client';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function PaymentPage() {
   const router = useRouter();
-  const { data: session, isPending } = useSession();
+  const { user, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -29,12 +29,12 @@ export default function PaymentPage() {
   });
 
   // Redirect if not authenticated
-  if (!isPending && !session) {
+  if (!authLoading && !user) {
     router.push('/login');
     return null;
   }
 
-  if (isPending) {
+  if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
         <div className="text-center">

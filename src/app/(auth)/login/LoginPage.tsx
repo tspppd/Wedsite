@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { Heart, Mail, Lock, AlertCircle, Loader2 } from 'lucide-react';
 import { Button, Input } from '@/components/ui';
-import { authClient } from '@/lib/auth-client';
+import { auth } from '@/lib/auth/client';
 import { loginSchema, type LoginInput } from '@/lib/validations/auth';
 
 export default function LoginPage() {
@@ -29,21 +29,15 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      await authClient.signIn.email(
-        {
-          email: data.email,
-          password: data.password,
-        },
-        {
-          onSuccess: () => {
-            router.push('/builder');
-          },
-          onError: (ctx) => {
-            setError(ctx.error.message || 'อีเมลหรือรหัสผ่านไม่ถูกต้อง');
-          },
-        }
-      );
-    } catch (err) {
+      const { error: signInError } = await auth.signIn(data.email, data.password);
+
+      if (signInError) {
+        setError(signInError.message || 'อีเมลหรือรหัสผ่านไม่ถูกต้อง');
+      } else {
+        router.push('/builder');
+        router.refresh();
+      }
+    } catch (err: any) {
       setError('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
     } finally {
       setLoading(false);
@@ -55,10 +49,13 @@ export default function LoginPage() {
     setGoogleLoading(true);
 
     try {
-      await authClient.signIn.social({
-        provider: 'google',
-        callbackURL: '/builder',
-      });
+      const { error: googleError } = await auth.signInWithGoogle();
+      
+      if (googleError) {
+        setError('เกิดข้อผิดพลาดในการเข้าสู่ระบบด้วย Google');
+        setGoogleLoading(false);
+      }
+      // Don't set loading to false here as we're redirecting
     } catch (err) {
       setError('เกิดข้อผิดพลาดในการเข้าสู่ระบบด้วย Google');
       setGoogleLoading(false);

@@ -6,15 +6,16 @@ import { useState } from 'react';
 import { Button } from '../ui/Button';
 import { useRouter } from 'next/navigation';
 import { ThemeToggle } from '../ui/ThemeToggle';
-import { useSession, signOut } from '@/lib/auth-client';
+import { useAuth } from '@/hooks/useAuth';
+import { auth } from '@/lib/auth/client';
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { data: session } = useSession();
+  const { user } = useAuth();
   const router = useRouter();
 
   const handleLogout = async () => {
-    await signOut();
+    await auth.signOut();
     router.push('/');
   };
 
@@ -46,14 +47,14 @@ export function Navbar() {
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
-            {session?.user ? (
+            {user ? (
               <div className="flex items-center gap-3">
                 <Link
                   href="/builder"
                   className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-pink-500"
                 >
                   <User className="w-5 h-5" />
-                  {session.user.name}
+                  {user.user_metadata?.name || user.email}
                 </Link>
                 <Link href="/pricing">
                   <Button size="sm">Upgrade Pro</Button>
@@ -114,7 +115,7 @@ export function Navbar() {
               ราคา
             </Link>
             <div className="pt-3 border-t dark:border-gray-800 space-y-2">
-              {session?.user ? (
+              {user ? (
                 <>
                   <Link href="/builder" className="block">
                     <Button className="w-full">Builder</Button>

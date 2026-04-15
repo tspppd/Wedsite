@@ -125,8 +125,13 @@ export default function TestUsersPage() {
             <ol className="space-y-2 text-gray-600 dark:text-gray-300">
               <li>1. คลิกปุ่ม "Copy Email" หรือ "Copy Password" เพื่อคัดลอก</li>
               <li>2. ไปที่หน้า Login และวางข้อมูลที่คัดลอก</li>
-              <li>3. หรือสร้าง users ใหม่ด้วยคำสั่ง: <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">bun run seed</code></li>
+              <li>3. หรือสร้าง account ใหม่ที่หน้า Register</li>
             </ol>
+            <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+              <p className="text-sm text-blue-700 dark:text-blue-300">
+                ℹ️ ระบบใช้ Supabase Authentication - users จะถูกเก็บใน Supabase Database
+              </p>
+            </div>
           </CardContent>
         </Card>
 
@@ -231,26 +236,26 @@ export default function TestUsersPage() {
             <div className="space-y-3">
               <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                 <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
-                  สร้าง mockup users อัตโนมัติ:
+                  Generate Prisma Client:
                 </p>
                 <code className="text-sm bg-gray-900 dark:bg-gray-950 text-green-400 px-4 py-2 rounded block">
-                  bun run seed
+                  bun run prisma:generate
                 </code>
               </div>
               <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                 <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
-                  ลบ database และเริ่มใหม่:
+                  Push Prisma schema to database:
                 </p>
                 <code className="text-sm bg-gray-900 dark:bg-gray-950 text-green-400 px-4 py-2 rounded block">
-                  rm sqlite.db sqlite.db-shm sqlite.db-wal && bun dev
+                  bun run prisma:push
                 </code>
               </div>
               <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                 <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
-                  ดู users ใน database:
+                  Open Prisma Studio:
                 </p>
                 <code className="text-sm bg-gray-900 dark:bg-gray-950 text-green-400 px-4 py-2 rounded block">
-                  sqlite3 sqlite.db "SELECT * FROM user;"
+                  bun run prisma:studio
                 </code>
               </div>
             </div>
@@ -259,7 +264,7 @@ export default function TestUsersPage() {
 
         {/* Footer */}
         <div className="text-center mt-8 text-sm text-gray-500 dark:text-gray-400">
-          <p>💡 Tip: ใช้ DevTools เพื่อดู session และ cookies</p>
+          <p>💡 Tip: ใช้ DevTools เพื่อดู session และ cookies หรือเปิด Supabase Dashboard เพื่อดู users</p>
         </div>
       </div>
     </div>

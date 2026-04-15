@@ -4,20 +4,20 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Heart, Plus, Save, Eye, Settings, Palette, Layout, Image, Type, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui';
-import { useSession } from '@/lib/auth-client';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function BuilderPage() {
   const router = useRouter();
-  const { data: session, isPending } = useSession();
+  const { user, loading } = useAuth();
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
 
   // Redirect if not authenticated
-  if (!isPending && !session) {
+  if (!loading && !user) {
     router.push('/login');
     return null;
   }
 
-  if (isPending) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
         <div className="text-center">
@@ -49,7 +49,7 @@ export default function BuilderPage() {
                   Wedding Builder
                 </h1>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  สวัสดี, {session?.user?.name}
+                  สวัสดี, {user?.user_metadata?.name || user?.email}
                 </p>
               </div>
             </div>
