@@ -12,11 +12,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const baseStyles = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
     
     const variants = {
-      primary: 'bg-pink-500 text-white hover:bg-pink-600 focus:ring-pink-500',
-      secondary: 'bg-gray-800 text-white hover:bg-gray-900 focus:ring-gray-800',
-      outline: 'border-2 border-pink-500 text-pink-500 hover:bg-pink-50 focus:ring-pink-500',
-      ghost: 'text-gray-600 hover:bg-gray-100 focus:ring-gray-500',
-      danger: 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-500',
+      primary: 'bg-pink-500 text-white hover:bg-pink-600 focus:ring-pink-500 dark:bg-pink-600 dark:hover:bg-pink-700',
+      secondary: 'bg-gray-800 text-white hover:bg-gray-900 focus:ring-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600',
+      outline: 'border-2 border-pink-500 text-pink-500 hover:bg-pink-50 focus:ring-pink-500 dark:border-pink-400 dark:text-pink-400 dark:hover:bg-pink-950',
+      ghost: 'text-gray-600 hover:bg-gray-100 focus:ring-gray-500 dark:text-gray-300 dark:hover:bg-gray-800',
+      danger: 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-500 dark:bg-red-600 dark:hover:bg-red-700',
     };
     
     const sizes = {
