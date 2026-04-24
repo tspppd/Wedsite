@@ -1,3 +1,7 @@
+// Prisma Schema for WedSite
+// Database: Supabase (PostgreSQL)
+// Authentication: Supabase Auth (not Better Auth)
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -6,50 +10,63 @@ datasource db {
   provider = "postgresql"
 }
 
+// ============================================
+// User Profile (extends Supabase auth.users)
+// ============================================
 model Profile {
-  id            String    @id @default(cuid())
-  name          String
+  id            String    @id @db.Uuid
   email         String    @unique
-  emailVerified Boolean   @default(false) @map("email_verified")
-  image         String?   @map("image") // สำหรับเก็บ Avatar
-  role          String?   @default("user") // จำเป็นสำหรับ Admin Plugin
+  name          String
+  role          Role      @default(USER)
   plan          Plan      @default(FREE)
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  avatarUrl     String?   @map("avatar_url")
+  emailVerified Boolean   @default(false) @map("email_verified")
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  // Relationships
-  sessions      Session[]
-  accounts      Account[]
-  weddingSites  WeddingSite[]
-  payments      Payment[]
+  // Relations
+  weddingSites WeddingSite[]
+  payments     Payment[]
 
   @@map("profiles")
 }
 
+// ============================================
+// Wedding Website
+// ============================================
 model WeddingSite {
-  id           String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  userId       String         @map("user_id") @db.Uuid
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String   @map("user_id") @db.Uuid
   title        String
-  slug         String         @unique
-  template     String         @default("classic")
-  customDomain String?        @unique @map("custom_domain")
-  isPublished  Boolean        @default(false) @map("is_published")
-  themeColors  Json           @default("{}") @map("theme_colors")
-  sections     Json           @default("[]") @map("sections")
-  settings     Json           @default("{}") @map("settings")
-  createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt    DateTime       @updatedAt @map("updated_at") @db.Timestamptz(6)
-  analytics    Analytics[]
-  rsvps        RsvpResponse[]
-  user         Profile        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  slug         String   @unique
+  groomName    String?  @map("groom_name")
+  brideName    String?  @map("bride_name")
+  weddingDate  DateTime? @map("wedding_date") @db.Date
+  template     String   @default("classic")
+  customDomain String?  @unique @map("custom_domain")
+  isPublished  Boolean  @default(false) @map("is_published")
+  themeColors  Json     @default("{}") @map("theme_colors") @db.JsonB
+  sections     Json     @default("[]") @map("sections") @db.JsonB
+  settings     Json     @default("{}") @map("settings") @db.JsonB
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+  user      Profile        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rsvps     RsvpResponse[]
+  analytics Analytics[]
 
   @@index([userId])
   @@index([slug])
+  @@index([isPublished])
   @@map("wedding_sites")
 }
 
+// ============================================
+// RSVP Response
+// ============================================
 model RsvpResponse {
-  id                  String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id                  String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   weddingSiteId       String           @map("wedding_site_id") @db.Uuid
   guestName           String           @map("guest_name")
   guestEmail          String?          @map("guest_email")
@@ -59,14 +76,20 @@ model RsvpResponse {
   dietaryRequirements String?          @map("dietary_requirements")
   message             String?
   createdAt           DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
-  weddingSite         WeddingSite      @relation(fields: [weddingSiteId], references: [id], onDelete: Cascade)
+
+  // Relations
+  weddingSite WeddingSite @relation(fields: [weddingSiteId], references: [id], onDelete: Cascade)
 
   @@index([weddingSiteId])
+  @@index([guestEmail])
   @@map("rsvp_responses")
 }
 
+// ============================================
+// Payment
+// ============================================
 model Payment {
-  id            String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id            String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId        String        @map("user_id") @db.Uuid
   amount        Decimal       @db.Decimal(10, 2)
   currency      String        @default("THB")
@@ -74,43 +97,41 @@ model Payment {
   plan          Plan
   paymentMethod String?       @map("payment_method")
   transactionId String?       @unique @map("transaction_id")
-  metadata      Json          @default("{}")
+  metadata      Json          @default("{}") @db.JsonB
   createdAt     DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
-  user          Profile       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Relations
+  user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([status])
   @@map("payments")
 }
 
+// ============================================
+// Analytics
+// ============================================
 model Analytics {
-  id            String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id            String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   weddingSiteId String      @map("wedding_site_id") @db.Uuid
   eventType     String      @map("event_type")
-  eventData     Json        @default("{}") @map("event_data")
+  eventData     Json        @default("{}") @map("event_data") @db.JsonB
   ipAddress     String?     @map("ip_address")
   userAgent     String?     @map("user_agent")
   createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
-  weddingSite   WeddingSite @relation(fields: [weddingSiteId], references: [id], onDelete: Cascade)
+
+  // Relations
+  weddingSite WeddingSite @relation(fields: [weddingSiteId], references: [id], onDelete: Cascade)
 
   @@index([weddingSiteId])
+  @@index([eventType])
+  @@index([createdAt])
   @@map("analytics")
 }
 
-model Session {
-  id        String   @id
-  expiresAt DateTime
-  token     String   @unique
-  createdAt DateTime
-  updatedAt DateTime
-  ipAddress String?  @map("ip_address")
-  userAgent String?  @map("user_agent")
-  userId    String   @map("user_id") @db.Uuid
-  profile   Profile  @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@map("session")
-}
-
+// ============================================
+// Enums
+// ============================================
 enum Role {
   USER  @map("user")
   ADMIN @map("admin")
@@ -132,23 +153,4 @@ enum PaymentStatus {
   COMPLETED @map("completed")
   FAILED    @map("failed")
   REFUNDED  @map("refunded")
-}
-
-model Account {
-  id                    String    @id @default(cuid())
-  accountId             String    @map("account_id")
-  providerId            String    @map("provider_id")
-  userId                String    @map("user_id")
-  profile               Profile   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  accessToken           String?   @map("access_token")
-  refreshToken          String?   @map("refresh_token")
-  idToken               String?   @map("id_token")
-  accessTokenExpiresAt  DateTime? @map("access_token_expires_at")
-  refreshTokenExpiresAt DateTime? @map("refresh_token_expires_at")
-  scope                 String?
-  password              String?   // สำหรับ Email/Password Login
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
-
-  @@map("account")
 }
