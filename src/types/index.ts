@@ -106,7 +106,7 @@ export const paymentSchema = z.object({
 export type PaymentInput = z.infer<typeof paymentSchema>;
 
 // ===== Plan Types =====
-export type PlanType = 'free' | 'pro';
+export type PlanType = 'free' | 'standard' | 'pro';
 
 export interface Plan {
   id: PlanType;

@@ -25,13 +25,19 @@ export const auth = {
     return { data, error }
   },
 
-  signInWithGoogle: async () => {
+  signInWithSocial: async (provider: 'google' | 'facebook') => {
     const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider,
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
       },
     })
+
+    if (data?.url) {
+      window.location.assign(data.url)
+      return { data, error }
+    }
+
     return { data, error }
   },
 

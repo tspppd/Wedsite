@@ -9,12 +9,14 @@ import { Heart, Mail, Lock, AlertCircle, Loader2 } from 'lucide-react';
 import { Button, Input } from '@/components/ui';
 import { auth } from '@/lib/auth/client';
 import { loginSchema, type LoginInput } from '@/lib/validations/auth';
+import { authClient } from '@/lib/auth-client';
 
 export default function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [facebookLoading, setFacebookLoading] = useState(false);
 
   const {
     register,
@@ -34,7 +36,7 @@ export default function LoginPage() {
       if (signInError) {
         setError(signInError.message || 'อีเมลหรือรหัสผ่านไม่ถูกต้อง');
       } else {
-        router.push('/builder');
+        router.push('/dashboard');
         router.refresh();
       }
     } catch (err: any) {
@@ -44,22 +46,19 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    setError('');
-    setGoogleLoading(true);
 
-    try {
-      const { error: googleError } = await auth.signInWithGoogle();
-      
-      if (googleError) {
-        setError('เกิดข้อผิดพลาดในการเข้าสู่ระบบด้วย Google');
-        setGoogleLoading(false);
-      }
-      // Don't set loading to false here as we're redirecting
-    } catch (err) {
-      setError('เกิดข้อผิดพลาดในการเข้าสู่ระบบด้วย Google');
-      setGoogleLoading(false);
+  const handleSocialLogin = async (provider: 'google' | 'facebook') => {
+    setError('');
+    if (provider === 'google') {
+      setGoogleLoading(true);
+    } else {
+      setFacebookLoading(true);
     }
+    await authClient.signIn.social({
+      provider: provider,
+      // เมื่อล็อกอินเสร็จแล้ว จะให้ระบบเด้งผู้ใช้กลับมาที่หน้าไหน
+      callbackURL: "/dashboard", 
+    });
   };
 
   return (
@@ -96,7 +95,7 @@ export default function LoginPage() {
             variant="outline"
             className="w-full mb-6"
             size="lg"
-            onClick={handleGoogleLogin}
+            onClick={() => handleSocialLogin('google')}
             disabled={googleLoading || loading}
           >
             {googleLoading ? (
@@ -125,6 +124,29 @@ export default function LoginPage() {
                   />
                 </svg>
                 เข้าสู่ระบบด้วย Google
+              </>
+            )}
+          </Button>
+
+          {/* Facebook Login */}
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full mb-6"
+            size="lg"
+            onClick={() => handleSocialLogin('facebook')}
+            disabled={facebookLoading || loading}
+            
+          >
+            {facebookLoading ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                กำลังเชื่อมต่อ...
+              </>
+            ) : (
+              <>
+                <svg className='w-6 h-6 mr-2' viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <circle cx="16" cy="16" r="14" fill="url(#paint0_linear_87_7208)"></circle> <path d="M21.2137 20.2816L21.8356 16.3301H17.9452V13.767C17.9452 12.6857 18.4877 11.6311 20.2302 11.6311H22V8.26699C22 8.26699 20.3945 8 18.8603 8C15.6548 8 13.5617 9.89294 13.5617 13.3184V16.3301H10V20.2816H13.5617V29.8345C14.2767 29.944 15.0082 30 15.7534 30C16.4986 30 17.2302 29.944 17.9452 29.8345V20.2816H21.2137Z" fill="white"></path> <defs> <linearGradient id="paint0_linear_87_7208" x1="16" y1="2" x2="16" y2="29.917" gradientUnits="userSpaceOnUse"> <stop stopColor="#18ACFE"></stop> <stop offset="1" stopColor="#0163E0"></stop> </linearGradient> </defs> </g></svg>
+                เข้าสู่ระบบด้วย Facebook
               </>
             )}
           </Button>

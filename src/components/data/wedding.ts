@@ -105,11 +105,28 @@ export const plans: Plan[] = [
       'Section พื้นฐาน 5 Section',
       'URL เว็บไซต์แบบสุ่ม',
       'รองรับแขก 50 คน',
+      'Custom Wedding Website'
     ],
     limitations: [
       'มีโฆษณา',
       'ไม่สามารถใช้ Custom Domain',
       'ไม่สามารถดาวน์โหลดข้อมูล RSVP',
+    ],
+  },
+  {
+    id: 'standard',
+    name: 'Standard',
+    price: 199,
+    popular: true,
+    features: [
+      'ใช้ Template ได้ทุกแบบ',
+      'Section ครบทุก Section',
+      'Custom URL',
+      'รองรับแขก 150 คน',
+      'ไม่มีโฆษณา',
+      'RSVP & Export ข้อมูล RSVP เป็น Excel',
+      'Custom Background Music',
+      'Photo Gallery ไม่จำกัด',
     ],
   },
   {
@@ -126,6 +143,7 @@ export const plans: Plan[] = [
       'Export ข้อมูล RSVP เป็น Excel',
       'Custom Background Music',
       'Photo Gallery ไม่จำกัด',
+      'ดาวน์โหลดการ์ดเชิญดิจิทัล',
     ],
   },
 ];

@@ -33,10 +33,10 @@ export function Navbar() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-6">
-            <Link href="#features" className="text-gray-600 dark:text-gray-300 hover:text-pink-500 transition-colors">
+            <Link href="/#features" className="text-gray-600 dark:text-gray-300 hover:text-pink-500 transition-colors">
               ฟีเจอร์
             </Link>
-            <Link href="#templates" className="text-gray-600 dark:text-gray-300 hover:text-pink-500 transition-colors">
+            <Link href="/#templates" className="text-gray-600 dark:text-gray-300 hover:text-pink-500 transition-colors">
               เทมเพลต
             </Link>
             <Link href="/pricing" className="text-gray-600 dark:text-gray-300 hover:text-pink-500 transition-colors">
@@ -50,7 +50,7 @@ export function Navbar() {
             {user ? (
               <div className="flex items-center gap-3">
                 <Link
-                  href="/builder"
+                  href="/dashboard"
                   className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-pink-500"
                 >
                   <User className="w-5 h-5" />
@@ -117,8 +117,8 @@ export function Navbar() {
             <div className="pt-3 border-t dark:border-gray-800 space-y-2">
               {user ? (
                 <>
-                  <Link href="/builder" className="block">
-                    <Button className="w-full">Builder</Button>
+                  <Link href="/dashboard" className="block">
+                    <Button className="w-full">Dashboard</Button>
                   </Link>
                   <Button variant="outline" className="w-full" onClick={handleLogout}>
                     ออกจากระบบ

@@ -55,6 +55,9 @@ export default function BuilderPage() {
             </div>
 
             <div className="flex items-center gap-3">
+              <Button variant="outline" size="sm" onClick={() => router.push('/dashboard')}>
+                Dashboard
+              </Button>
               <Button variant="outline" size="sm">
                 <Eye className="w-4 h-4 mr-2" />
                 Preview
@@ -131,7 +134,7 @@ export default function BuilderPage() {
 
           {/* Main Canvas */}
           <div className="lg:col-span-3">
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 min-h-[600px]">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 min-h-150">
               {selectedSection ? (
                 <div className="text-center py-12">
                   <div className="w-16 h-16 bg-pink-100 dark:bg-pink-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
