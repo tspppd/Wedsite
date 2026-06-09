@@ -7,7 +7,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { Heart, Mail, Lock, User, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 import { Button, Input } from '@/components/ui';
-import { auth } from '@/lib/auth/client';
+
+// ⚡ 1. เปลี่ยนมาใช้ authClient สไตล์ Better Auth สำหรับ Client Component
+import { authClient } from '@/lib/auth-client'; 
 import { registerSchema, type RegisterInput } from '@/lib/validations/auth';
 
 export default function RegisterPage() {
@@ -28,39 +30,48 @@ export default function RegisterPage() {
   const password = watch('password', '');
   const confirmPassword = watch('confirmPassword', '');
 
+  // ⚡ 2. ปรับปรุงฟังก์ชันส่งฟอร์มสมัครสมาชิก (Email/Password)
   const onSubmit = async (data: RegisterInput) => {
     setError('');
     setLoading(true);
 
     try {
-      const { error: signUpError } = await auth.signUp(data.email, data.password, data.name);
+      // เรียกใช้ฟังก์ชัน signUp.email ของ Better Auth ได้โดยตรง
+      const { data: signUpData, error: signUpError } = await authClient.signUp.email({
+        email: data.email,
+        password: data.password,
+        name: data.name,
+        // หมายเหตุ: ฟีลด์พิเศษอย่าง plan หรือ role จะถูกตั้งเป็นค่าเริ่มต้นอัตโนมัติที่ตารางหลังบ้านตามที่เราเซ็ตไว้
+      });
 
       if (signUpError) {
-        setError(signUpError.message || 'สมัครสมาชิกไม่สำเร็จ');
+        // ดึงข้อความแจ้งเตือนจากหลังบ้านโชว์หน้าจอ (เช่น อีเมลซ้ำ รหัสสั้นเกินไป)
+        setError(signUpError.message || 'สมัครสมาชิกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
       } else {
+        // เมื่อสมัครสำเร็จ ให้ทำการพ่นผู้ใช้ไปหน้าสร้างเว็บบิวเดอร์
         router.push('/builder');
         router.refresh();
       }
     } catch (err: any) {
-      setError('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+      setError('เกิดข้อผิดพลาดของระบบหลังบ้าน กรุณาลองใหม่อีกครั้ง');
     } finally {
       setLoading(false);
     }
   };
 
+  // ⚡ 3. ปรับปรุงระบบสมัคร/ล็อกอินด้วยบัญชี Google
   const handleGoogleSignup = async () => {
     setError('');
     setGoogleLoading(true);
 
     try {
-      const { error: googleError } = await auth.signInWithGoogle();
+      await authClient.signIn.social({
+        provider: 'google',
+        callbackURL: '/builder', // สมัครเสร็จให้ระบบเด้งออโต้ไปหน้านี้
+      });
       
-      if (googleError) {
-        setError('เกิดข้อผิดพลาดในการสมัครด้วย Google');
-        setGoogleLoading(false);
-      }
     } catch (err) {
-      setError('เกิดข้อผิดพลาดในการสมัครด้วย Google');
+      setError('เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์ Google');
       setGoogleLoading(false);
     }
   };
@@ -95,7 +106,7 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        {/* Form */}
+        {/* Form Container */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-700">
           {error && (
             <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start gap-3">
@@ -165,9 +176,14 @@ export default function RegisterPage() {
                 type="text"
                 placeholder="สมชาย ใจดี"
                 disabled={loading || googleLoading}
-                error={errors.name?.message}
                 {...register('name')}
               />
+              {/* 🎯 แสดงข้อความแจ้งเตือนใต้ Input แทน */}
+                {errors.name?.message && (
+                  <p className="mt-1 text-xs text-red-500 font-medium">
+                    {errors.name?.message}
+                  </p>
+                )}
             </div>
 
             <div>
@@ -179,9 +195,14 @@ export default function RegisterPage() {
                 type="email"
                 placeholder="your@email.com"
                 disabled={loading || googleLoading}
-                error={errors.email?.message}
                 {...register('email')}
               />
+              {/* 🎯 แสดงข้อความแจ้งเตือนใต้ Input แทน */}
+                {errors.email?.message && (
+                  <p className="mt-1 text-xs text-red-500 font-medium">
+                    {errors.email?.message}
+                  </p>
+                )}
             </div>
 
             <div>
@@ -193,9 +214,14 @@ export default function RegisterPage() {
                 type="password"
                 placeholder="••••••••"
                 disabled={loading || googleLoading}
-                error={errors.password?.message}
                 {...register('password')}
               />
+              {/* 🎯 แสดงข้อความแจ้งเตือนใต้ Input แทน */}
+                {errors.password?.message && (
+                  <p className="mt-1 text-xs text-red-500 font-medium">
+                    {errors.password?.message}
+                  </p>
+                )}
               {strength && (
                 <div className="mt-2">
                   <div className="flex items-center justify-between text-xs mb-1">
@@ -224,9 +250,14 @@ export default function RegisterPage() {
                 type="password"
                 placeholder="••••••••"
                 disabled={loading || googleLoading}
-                error={errors.confirmPassword?.message}
                 {...register('confirmPassword')}
               />
+              {/* 🎯 แสดงข้อความแจ้งเตือนใต้ Input แทน */}
+                {errors.confirmPassword?.message && (
+                  <p className="mt-1 text-xs text-red-500 font-medium">
+                    {errors.confirmPassword?.message}
+                  </p>
+                )}
               {confirmPassword && password && (
                 <div className="mt-2 flex items-center gap-2 text-xs">
                   {password === confirmPassword ? (

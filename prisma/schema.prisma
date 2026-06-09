@@ -1,60 +1,108 @@
-// Prisma Schema for WedSite
-// Database: Supabase (PostgreSQL)
-// Authentication: Supabase Auth (not Better Auth)
-
+// ============================================
+// CONFIGURATION (Prisma v7)
+// ============================================
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  // นำ URL ออกไปไว้ใน prisma.config.ts ตามกฎ Prisma v7
 }
 
 // ============================================
-// User Profile (extends Supabase auth.users)
+// Better Auth - Core Models (แทนที่ profiles เดิม)
 // ============================================
-model Profile {
-  id            String    @id @db.Uuid
-  email         String    @unique
+
+model User {
+  id            String  @id @default(uuid()) // เปลี่ยนมาใช้ string uuid มาตรฐานของ better-auth
   name          String
-  role          Role      @default(USER)
-  plan          Plan      @default(FREE)
-  avatarUrl     String?   @map("avatar_url")
-  emailVerified Boolean   @default(false) @map("email_verified")
-  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  email         String  @unique
+  emailVerified Boolean @default(false)
+  image         String? // เปลี่ยนชื่อจาก avatarUrl เพื่อให้ตรงกับ Core ของ Better Auth
+  role      Role     @default(USER)
+  plan      Plan     @default(FREE)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
 
   // Relations
+  sessions     Session[]
+  accounts     Account[]
   weddingSites WeddingSite[]
   payments     Payment[]
 
-  @@map("profiles")
+  @@map("user") // Better Auth แนะนำให้ใช้ชื่อตารางแบบเอกพจน์ตัวเล็ก
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
 }
 
 // ============================================
 // Wedding Website
 // ============================================
 model WeddingSite {
-  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId       String   @map("user_id") @db.Uuid
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String    @map("user_id") 
   title        String
-  slug         String   @unique
-  groomName    String?  @map("groom_name")
-  brideName    String?  @map("bride_name")
+  slug         String    @unique
+  groomName    String?   @map("groom_name")
+  brideName    String?   @map("bride_name")
   weddingDate  DateTime? @map("wedding_date") @db.Date
-  template     String   @default("classic")
-  customDomain String?  @unique @map("custom_domain")
-  isPublished  Boolean  @default(false) @map("is_published")
-  themeColors  Json     @default("{}") @map("theme_colors") @db.JsonB
-  sections     Json     @default("[]") @map("sections") @db.JsonB
-  settings     Json     @default("{}") @map("settings") @db.JsonB
-  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  template     String    @default("classic")
+  customDomain String?   @unique @map("custom_domain")
+  isPublished  Boolean   @default(false) @map("is_published")
+  themeColors  Json      @default("{}") @map("theme_colors") @db.JsonB
+  sections     Json      @default("[]") @map("sections") @db.JsonB
+  settings     Json      @default("{}") @map("settings") @db.JsonB
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   // Relations
-  user      Profile        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   rsvps     RsvpResponse[]
   analytics Analytics[]
+  wishes    BlessingWish[] // ✨ เพิ่มจุดเชื่อมโยงไปยังสมุดอวยพรออนไลน์
 
   @@index([userId])
   @@index([slug])
@@ -63,7 +111,7 @@ model WeddingSite {
 }
 
 // ============================================
-// RSVP Response
+// RSVP Response (แขกตอบรับว่าจะมาไหม)
 // ============================================
 model RsvpResponse {
   id                  String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -74,7 +122,6 @@ model RsvpResponse {
   attendanceStatus    AttendanceStatus @map("attendance_status")
   numberOfGuests      Int              @default(1) @map("number_of_guests")
   dietaryRequirements String?          @map("dietary_requirements")
-  message             String?
   createdAt           DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
 
   // Relations
@@ -86,11 +133,30 @@ model RsvpResponse {
 }
 
 // ============================================
+// ✨ NEW: Blessing Wish (สมุดอวยพรออนไลน์แยกเฉพาะ)
+// ============================================
+model BlessingWish {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  weddingSiteId String   @map("wedding_site_id") @db.Uuid
+  senderName    String   @map("sender_name")
+  message       String   @db.Text
+  isApproved    Boolean  @default(true) @map("is_approved") // สำหรับให้บ่าวสาวกดยอมรับ/ซ่อนคำอวยพรกวนใจ
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  // Relations
+  weddingSite WeddingSite @relation(fields: [weddingSiteId], references: [id], onDelete: Cascade)
+
+  @@index([weddingSiteId])
+  @@index([createdAt])
+  @@map("blessing_wishes")
+}
+
+// ============================================
 // Payment
 // ============================================
 model Payment {
   id            String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId        String        @map("user_id") @db.Uuid
+  userId        String        @map("user_id") 
   amount        Decimal       @db.Decimal(10, 2)
   currency      String        @default("THB")
   status        PaymentStatus
@@ -101,7 +167,7 @@ model Payment {
   createdAt     DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
 
   // Relations
-  user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([status])
@@ -112,13 +178,13 @@ model Payment {
 // Analytics
 // ============================================
 model Analytics {
-  id            String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  weddingSiteId String      @map("wedding_site_id") @db.Uuid
-  eventType     String      @map("event_type")
-  eventData     Json        @default("{}") @map("event_data") @db.JsonB
-  ipAddress     String?     @map("ip_address")
-  userAgent     String?     @map("user_agent")
-  createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  weddingSiteId String   @map("wedding_site_id") @db.Uuid
+  eventType     String   @map("event_type")
+  eventData     Json     @default("{}") @map("event_data") @db.JsonB
+  ipAddress     String?  @map("ip_address")
+  userAgent     String?  @map("user_agent")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
 
   // Relations
   weddingSite WeddingSite @relation(fields: [weddingSiteId], references: [id], onDelete: Cascade)
@@ -130,7 +196,7 @@ model Analytics {
 }
 
 // ============================================
-// Enums
+// Enums (สอดคล้องกับความต้องการของสเปกทั้งหมด)
 // ============================================
 enum Role {
   USER  @map("user")
@@ -138,8 +204,9 @@ enum Role {
 }
 
 enum Plan {
-  FREE @map("free")
-  PRO  @map("pro")
+  FREE     @map("free")
+  STANDARD @map("standard")
+  PRO      @map("pro")
 }
 
 enum AttendanceStatus {

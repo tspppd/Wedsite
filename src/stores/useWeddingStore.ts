@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { WeddingWebsite, TemplateId, Section, WeddingInfoInput, DeviceType } from '../types/index';
-import { defaultSections } from '../data/wedding';
+import { defaultSections } from '@/components/data/wedding';
 
 interface WeddingState {
   websites: WeddingWebsite[];
