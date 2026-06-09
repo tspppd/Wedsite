@@ -1,10 +1,10 @@
 // src/services/wedding.ts
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { headers } from "next/headers";
 
 export async function getWeddingData() {
   // 1. ตรวจสอบ Session จากตัวคุกกี้ที่ส่งมาใน Headers ฝั่ง Server
+  const { headers } = await import('next/headers')
   const session = await auth.api.getSession({
     headers: await headers(),
   });

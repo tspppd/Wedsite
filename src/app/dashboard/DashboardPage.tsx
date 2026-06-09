@@ -9,12 +9,17 @@ import {
 import { Button } from '@/components/ui';
 import { Card, CardContent } from '@/components/ui';
 import { useState } from 'react';
-import { getWeddingData } from '@/services/wedding';
 
-export default async function DashboardPage() {
+interface DashboardPageClientProps {
+    initialUser : any,
+    initialWedding : any
+}
+
+
+export default async function DashboardPage ({ initialUser , initialWedding } : DashboardPageClientProps) {
   const router = useRouter();
-//   const { user, loading } = useAuth();
-const { user , wedding } = await getWeddingData()
+    const user = initialUser 
+    const wedding = initialWedding
   const [copied, setCopied] = useState(false);
   const couple = `${wedding?.brideName}-${wedding?.groomName}`
 

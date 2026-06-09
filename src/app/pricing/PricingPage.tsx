@@ -127,7 +127,7 @@ const PricingPage = () => {
                 {/* CTA Button */}
                 <Button
                   className={`w-full ${plan.popular ? "bg-linear-to-r from-pink-500 to-rose-500 text-white hover:opacity-90" : ""}`}
-                  variant={plan.popular ? "primary" : "outline"}
+                  variant={plan.popular ? "default" : "outline"}
                   size="lg"
                   onClick={() => handleSelectPlan(plan.id)}
                   disabled={user?.plan === plan.id}
