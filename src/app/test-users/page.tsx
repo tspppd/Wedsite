@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Heart, Copy, CheckCircle, User, Crown, Shield } from 'lucide-react';
 import { Button, Card, CardContent } from '@/components/ui';
+import { appName } from '@/components/data/wedding';
 
 interface MockUser {
   name: string;
@@ -51,8 +52,8 @@ export default function TestUsersPage() {
       color: 'purple',
     },
     {
-      name: 'Admin WedSite',
-      email: 'admin@wedsite.com',
+      name: `Admin ${appName}`,
+      email: `admin@${appName}.com`,
       password: 'Admin1234',
       role: 'admin',
       plan: 'pro',
@@ -97,7 +98,7 @@ export default function TestUsersPage() {
           <Link href="/" className="inline-flex items-center gap-2 mb-6">
             <Heart className="w-10 h-10 text-pink-500 fill-pink-500" />
             <span className="text-2xl font-bold bg-linear-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent">
-              WedSite
+              {appName}
             </span>
           </Link>
           <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">

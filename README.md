@@ -1,4 +1,4 @@
-# WedSite - Wedding Website Builder
+# Everpage - Wedding Website Builder
 
 แพลตฟอร์มสร้างเว็บไซต์แต่งงานออนไลน์ ด้วย Next.js, Supabase และ Prisma
 
@@ -75,7 +75,7 @@ bun dev
 ## 📁 Project Structure
 
 ```
-wedsite/
+everpage/
 ├── src/
 │   ├── app/                    # Next.js App Router
 │   │   ├── (landing)/         # Landing page
@@ -271,7 +271,7 @@ Contributions are welcome! Please read CONTRIBUTING.md first.
 
 - Documentation: See docs folder
 - Issues: GitHub Issues
-- Email: support@wedsite.com
+- Email: support@everpage.com
 
 ---
 

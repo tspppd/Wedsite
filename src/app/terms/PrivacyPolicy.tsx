@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { Shield, Lock, Eye, Cookie, UserCheck, Share2, RefreshCw, Mail, ArrowLeft, Heart, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui';
+import { appName } from '@/components/data/wedding';
 
 export default function PrivacyPolicyPage() {
   const router = useRouter();
@@ -77,7 +78,7 @@ export default function PrivacyPolicyPage() {
         '1. ไปที่บัญชี Facebook ของคุณ เลือกเมนู การตั้งค่าและนโยบายความเป็นส่วนตัว > การตั้งค่า',
         '2. มองหาเมนู แอปและเว็บไซต์ (Apps and Websites)',
         '3. ค้นหาแอป [ชื่อแอปของคุณ] แล้วกด ลบออก (Remove)',
-        '4. ระบบของเราจะทำการลบข้อมูลโปรไฟล์และเซสชันที่ผูกกับ Facebook ออกจากฐานข้อมูลภายใน 24 ชั่วโมง หรือคุณสามารถส่งอีเมลแจ้งความประสงค์มาได้ที่ support@wedsite.com',
+        `4. ระบบของเราจะทำการลบข้อมูลโปรไฟล์และเซสชันที่ผูกกับ Facebook ออกจากฐานข้อมูลภายใน 24 ชั่วโมง หรือคุณสามารถส่งอีเมลแจ้งความประสงค์มาได้ที่ support@${appName}.com`,
       ]
     }
   ];
@@ -99,7 +100,7 @@ export default function PrivacyPolicyPage() {
           </Button>
           <div className="flex items-center gap-2">
             <Heart className="w-5 h-5 text-pink-500 fill-pink-500" />
-            <span className="font-bold text-sm text-gray-400 uppercase tracking-wider">WedSite Framework</span>
+            <span className="font-bold text-sm text-gray-400 uppercase tracking-wider">{appName} Framework</span>
           </div>
         </div>
 
@@ -115,7 +116,7 @@ export default function PrivacyPolicyPage() {
             มีผลบังคับใช้ตั้งแต่วันที่: <span className="font-semibold text-gray-700 dark:text-gray-300">9 มิถุนายน 2026</span>
           </p>
           <p className="mt-4 text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
-            WedSite ให้ความสำคัญและเคารพต่อความเป็นส่วนตัวของผู้ใช้งานทุกท่าน ไม่ว่าจะเป็นคู่บ่าวสาวผู้สร้างสรรค์เว็บไซต์ หรือแขกผู้มีเกียรติที่เข้ามาเยี่ยมชมและตอบรับการเข้าร่วมงาน (RSVP) นโยบายฉบับนี้อธิบายถึงวิธีการที่เราจัดเก็บ ใช้ และปกป้องข้อมูลของคุณ
+            {appName} ให้ความสำคัญและเคารพต่อความเป็นส่วนตัวของผู้ใช้งานทุกท่าน ไม่ว่าจะเป็นคู่บ่าวสาวผู้สร้างสรรค์เว็บไซต์ หรือแขกผู้มีเกียรติที่เข้ามาเยี่ยมชมและตอบรับการเข้าร่วมงาน (RSVP) นโยบายฉบับนี้อธิบายถึงวิธีการที่เราจัดเก็บ ใช้ และปกป้องข้อมูลของคุณ
           </p>
         </div>
 
@@ -157,13 +158,13 @@ export default function PrivacyPolicyPage() {
             หากคุณต้องการขอลบข้อมูลบัญชีผู้ใช้งาน ข้อมูลงานแต่งงาน หรือมีข้อสงสัยใดๆ สามารถติดต่อทีมงานของเราได้ทันที
           </p>
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 border border-gray-700 rounded-full text-sm font-mono text-pink-300">
-            support@wedsite.com
+            {`support@${appName}.com`}
           </div>
         </div>
 
         {/* Footer Note */}
         <p className="text-center text-xs text-gray-400 mt-8">
-          © 2026 WedSite Platform. All rights reserved. มุ่งมั่นดูแลข้อมูลคู่รักตามมาตรฐาน PDPA
+          © 2026 {appName} Platform. All rights reserved. มุ่งมั่นดูแลข้อมูลคู่รักตามมาตรฐาน PDPA
         </p>
 
       </div>

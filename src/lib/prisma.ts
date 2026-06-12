@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
-import { PrismaPg } from '@prisma/adapter-pg'
+import { PrismaNeon } from '@prisma/adapter-neon'
+
 
 const prismaClientSingleton = () => {
   const connectionString = process.env.DATABASE_URL || process.env.DIRECT_URL
@@ -8,7 +9,7 @@ const prismaClientSingleton = () => {
     throw new Error('DATABASE_URL หรือ DIRECT_URL ต้องถูกกำหนดก่อนสร้าง Prisma Client')
   }
 
-  const adapter = new PrismaPg({ connectionString })
+  const adapter = new PrismaNeon({ connectionString })
 
   return new PrismaClient({
     adapter,
