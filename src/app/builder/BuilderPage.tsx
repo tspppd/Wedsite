@@ -49,7 +49,7 @@ export default function BuilderPage() {
                   Wedding Builder
                 </h1>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  สวัสดี, {user?.user_metadata?.name || user?.email}
+                  สวัสดี, {user?.name || user?.email}
                 </p>
               </div>
             </div>

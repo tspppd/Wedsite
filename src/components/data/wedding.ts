@@ -1,5 +1,7 @@
 import { Template, Section, SectionType, Plan } from '@/types/index';
 
+
+export const appName = "Everpage"
 // ===== Templates =====
 export const templates: Template[] = [
   {

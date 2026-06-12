@@ -1,3 +1,4 @@
+import { appName } from '@/components/data/wedding';
 import { Card, CardContent } from '@/components/ui/Card'
 import { Star, Heart } from 'lucide-react';
 
@@ -8,7 +9,7 @@ export default function Testimonials() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-              คู่รักที่ใช้ WedSite
+              คู่รักที่ใช้ {appName}
             </h2>
           </div>
 

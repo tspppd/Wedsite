@@ -1,19 +1,4 @@
-import {
-  Heart,
-  Sparkles,
-  Palette,
-  Globe,
-  Check,
-  ArrowRight,
-  Star,
-} from "lucide-react";
-import { Button } from "@/components/ui";
-import { Card, CardContent } from "@/components/ui";
-import {
-  templates,
-  recommendedSections,
-} from "@/components/data/wedding";
-import Link from "next/link";
+
 import Testimonials from "./(section)/Testimonials";
 import CTA from "./(section)/CTA";
 import TechStack from "./(section)/TechStack";

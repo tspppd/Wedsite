@@ -18,8 +18,9 @@ const prompt = Prompt({
 });
 
 export const metadata: Metadata = {
-  title: "Wedsite",
+  title: 'Everpage',
   description: "สร้างเว็บไซต์แต่งงานง่ายๆ ในไม่กี่นาที ด้วยเทมเพลตสวยงามและฟีเจอร์ครบครัน",
+  
 };
 
 export default function RootLayout({

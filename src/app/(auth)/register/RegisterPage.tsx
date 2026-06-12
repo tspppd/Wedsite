@@ -11,6 +11,7 @@ import { Button, Input } from '@/components/ui';
 // ⚡ 1. เปลี่ยนมาใช้ authClient สไตล์ Better Auth สำหรับ Client Component
 import { authClient } from '@/lib/auth-client'; 
 import { registerSchema, type RegisterInput } from '@/lib/validations/auth';
+import { appName } from '@/components/data/wedding';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -95,7 +96,7 @@ export default function RegisterPage() {
           <Link href="/" className="inline-flex items-center gap-2 mb-4">
             <Heart className="w-10 h-10 text-pink-500 fill-pink-500" />
             <span className="text-2xl font-bold bg-linear-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent">
-              WedSite
+              { appName }
             </span>
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
@@ -105,7 +106,6 @@ export default function RegisterPage() {
             เริ่มสร้างเว็บแต่งงานของคุณวันนี้
           </p>
         </div>
-
         {/* Form Container */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-700">
           {error && (

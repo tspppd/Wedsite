@@ -1,6 +1,7 @@
 import React from 'react'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Palette, Sparkles, Globe } from 'lucide-react'
+import { appName } from '@/components/data/wedding'
 
 const Features = () => {
   return (
@@ -8,7 +9,7 @@ const Features = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-              ทำไมต้อง <span className="text-pink-500">WedSite</span>?
+              ทำไมต้อง <span className="text-pink-500">{appName}</span>?
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300">
               ทุกฟีเจอร์ที่คุณต้องการสำหรับเว็บแต่งงาน

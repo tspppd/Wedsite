@@ -7,7 +7,8 @@ import { Button } from '../ui/Button';
 import { useRouter } from 'next/navigation';
 import { ThemeToggle } from '../ui/ThemeToggle';
 import { useAuth } from '@/hooks/useAuth';
-import { auth } from '@/lib/auth/client';
+import { auth } from '@/lib/better-auth/auth';
+import { appName } from '../data/wedding';
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -27,7 +28,7 @@ export function Navbar() {
           <Link href="/" className="flex items-center gap-2">
             <Heart className="w-8 h-8 text-pink-500 fill-pink-500" />
             <span className="text-xl font-bold bg-linear-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent">
-              WedSite
+              { appName }
             </span>
           </Link>
 
@@ -54,7 +55,7 @@ export function Navbar() {
                   className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-pink-500"
                 >
                   <User className="w-5 h-5" />
-                  {user.user_metadata?.name || user.email}
+                  {user?.name || user.email}
                 </Link>
                 <Link href="/pricing">
                   <Button size="sm">Upgrade Pro</Button>
@@ -66,10 +67,10 @@ export function Navbar() {
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost">เข้าสู่ระบบ</Button>
+                  <Button variant="outline">เข้าสู่ระบบ</Button>
                 </Link>
                 <Link href="/register">
-                  <Button>สมัครสมาชิก</Button>
+                  <Button>เริ่มต้น</Button>
                 </Link>
               </>
             )}
@@ -130,7 +131,7 @@ export function Navbar() {
                     <Button variant="outline" className="w-full">เข้าสู่ระบบ</Button>
                   </Link>
                   <Link href="/register" className="block">
-                    <Button className="w-full">สมัครสมาชิก</Button>
+                    <Button variant={'outline'} className="w-full">เริ่มต้น</Button>
                   </Link>
                 </>
               )}

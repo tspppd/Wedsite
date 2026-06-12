@@ -11,8 +11,7 @@ import {
   Lock,
   AlertCircle,
   Loader2,
-  Eye,
-  EyeOffIcon,
+
 } from "lucide-react";
 import { Button, Input } from "@/components/ui";
 import {
@@ -20,9 +19,10 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { auth } from "@/lib/auth/client";
+import { auth } from "@/lib/better-auth/auth";
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 import { authClient } from "@/lib/auth-client";
+import { appName } from "@/components/data/wedding";
 
 
 export default function LoginPage() {
@@ -52,7 +52,10 @@ export default function LoginPage() {
       );
 
       if (signInError) {
-        setError(signInError.message || "อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+        const errorMessage = typeof signInError === "string"
+        ? signInError
+        : ( signInError as any ).message || "อีเมลหรือรหัสผ่านไม่ถูกต้อง"
+        setError(errorMessage);
       } else {
         router.push("/dashboard");
         router.refresh();
@@ -64,13 +67,14 @@ export default function LoginPage() {
     }
   };
 
-  const handleSocialLogin = async (provider: "google" | "facebook") => {
+  const handleSocialLogin = async (provider: "google" ) => {
     setError("");
     if (provider === "google") {
       setGoogleLoading(true);
-    } else {
-      setFacebookLoading(true);
-    }
+    } 
+    // else {
+    //   setFacebookLoading(true);
+    // }
     await authClient.signIn.social({
       provider: provider,
       // เมื่อล็อกอินเสร็จแล้ว จะให้ระบบเด้งผู้ใช้กลับมาที่หน้าไหน
@@ -86,7 +90,7 @@ export default function LoginPage() {
           <Link href="/" className="inline-flex items-center gap-2 mb-4">
             <Heart className="w-10 h-10 text-pink-500 fill-pink-500" />
             <span className="text-2xl font-bold bg-linear-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent">
-              WedSite
+              { appName }
             </span>
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
@@ -146,7 +150,7 @@ export default function LoginPage() {
           </Button>
 
           {/* Facebook Login */}
-          <Button
+          {/* <Button
             type="button"
             variant="outline"
             className="w-full mb-6"
@@ -205,7 +209,7 @@ export default function LoginPage() {
                 เข้าสู่ระบบด้วย Facebook
               </>
             )}
-          </Button>
+          </Button> */}
 
           {/* Divider */}
           <div className="relative mb-6">

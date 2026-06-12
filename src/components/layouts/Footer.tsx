@@ -1,5 +1,6 @@
 import { Heart } from 'lucide-react';
 import Link from 'next/link';
+import { appName } from '../data/wedding';
 
 export function Footer() {
   return (
@@ -10,7 +11,7 @@ export function Footer() {
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
               <Heart className="w-8 h-8 text-pink-500 fill-pink-500" />
-              <span className="text-xl font-bold text-white">WedSite</span>
+              <span className="text-xl font-bold text-white">{appName}</span>
             </div>
             <p className="text-gray-400 mb-4 max-w-md">
               สร้างเว็บไซต์งานแต่งงานสุดพิเศษของคุณได้ง่ายๆ ไม่ต้องเขียนโค้ด 
